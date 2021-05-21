@@ -8,23 +8,45 @@
 
 ^q::
         MouseGetPos, xpos, ypos 
-        afk = false
-        MsgBox,4,,, Script starten?
-        IfMsgBox, Yes
-        while(!afk){
-                if GetKeyState("Esc","P")
-                        ExitApp, 1
-                Sleep, 31000 
-                SearchForChests()
-                SearchForMonster()
-                SearchForScientists()
+        afk = 2
+        x = 0
+        y = 0
+        x2 = 0
+        y2 = 0 
+        color = 0
+        global Fx 
+        global Fy 
+        global what
+        MsgBox,4,, Script starten?
+        IfMsgBox Yes
+        While (true){
+
+                if(afk == 2){
+
+                        if GetKeyState("Esc","P")
+                                ExitApp, 1
+                        SearchFor(1)
+                        SearchFor(2)
+                        ;SearchFor(3)
+                        ;SearchFor(4)
+                       ; SearchForPixels(0x295882)
+                        ;SearchForPixels(0x00F9DD)
+                        ;SearchForMonster()
+                        ;SearchForScientists()
+                        Sleep, 31000 
+
+                }
+                Else
+                        ExitApp, 1 ;temp
         }
 
         Else
-                GuiClose:
-        ExitApp, 2
+                MouseGetPos, MouseX, MouseY
+        PixelGetColor, color, %MouseX%, %MouseY%
+        MsgBox The color at the current cursor position is %color%.
+GuiClose:
+ExitApp, 2
 
-}
 Verkaufen(){
         MouseMove, 1615, 111 
         Sleep, 1
@@ -38,14 +60,12 @@ Verkaufen(){
         Sleep, 1
         MouseClick
         Sleep, 1
-        Return
+Return
 }
-SearchForChests(){
-        PixelSearch, FoundX, FoundY, 100, 350, 140, 950, 0x295882,10,Fast
-        if (ErrorLevel = 1)
-        Return
-If (FoundX){
-        MouseMove, FoundX, FoundY+3
+OpenChests(){
+        if GetKeyState("Esc","P")
+                 ExitApp, 1
+        MouseMove, Fx, Fy+3
         sleep,1
         MouseClick
         Send,{Down}
@@ -57,9 +77,19 @@ If (FoundX){
         ShiftKlickLine()
         ShiftKlickLine()	
         Sleep, 10
-        Verkaufen()
-        SearchForChests()
+        Verkaufen()     
+        SearchFor(what) 
 }
+SearchForPixels(x,y,x2,y2,color){
+        
+        PixelSearch, FoundX, FoundY, x, y, x2, y2, color,10,Fast
+        if (ErrorLevel = 1)
+        Return
+        Else      
+        global Fx := FoundX
+        global Fy := FoundY  
+        Return 1
+        
 
 }
 
@@ -83,48 +113,64 @@ ShiftKlickLine(){
                 }
 
         }
-        Return
-}
-SearchForMonster(){
-        found = False
-        If (found)
-        KillMonster()
-        Else
-        Return
+Return
 }
 KillMonster(){
-
+       
 }
+
 SearchForScientists(){
         SearchForScientistLeft()
         SearchForScientistMiddle()
         SearchForScientistRight()
-        Return
+Return
 }
 SearchForScientistLeft(){
-  found = False
+        found = False
         If (found)
-        TakeRewardsAndGiveLeftQuest()
+                TakeRewardsAndGiveLeftQuest()
         Else
-        Return
+                Return
 }
 SearchForScientistMiddle(){
-  found = False
+        found = False
         If (found)
-        TakeRewardsAndGiveLeftQuest()
+                TakeRewardsAndGiveLeftQuest()
         Else
-        Return
+                Return
 }
 SearchForScientistRight(){
-  found = False
+        found = False
         If (found)
-        TakeRewardsAndGiveLeftQuest()
+                TakeRewardsAndGiveLeftQuest()
         Else
-        Return
+                Return
 }
 TakeRewardsAndGiveLeftQuest(){
 
 }
 MoveMouseTo(x,y){
-        
+
+}
+;searchfor 1 = chest, 2 = gchest , 3 monster, 4 scientist, 5 oil, ...
+SearchFor(thing){
+        If (thing == 1)
+                if (SearchForPixels(100, 350, 140, 950,0x295882)==1)
+                global what = 1
+                OpenChests()
+                return
+        If (thing == 2)      
+                if (SearchForPixels(100, 350, 140, 950,0x00F9DD)==1)
+                global what = 2
+                OpenChests()
+                return
+        If (thing ==3)
+                If (SearchForPixels(100, 350, 140, 950,0x0000FF)==1)
+                global what = 3
+                KillMonster()
+                Return
+             
+        ;If (thing ==4)
+               ; SearchForMonster(;green)
+
 }
