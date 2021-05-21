@@ -1,6 +1,6 @@
 ;TODO
 ;nach 10 min neue edelsteine herstelen/ wenn icon grau ist neue edelsteine herstellen
-;Imagesearchtest nur laufen lassen wenn afk
+;Imagesearchtes nur laufen lassen wenn afk
 ;wenn monster da ist töten
 ;wenn grau / grün an bestimmter stelle neue wissenschaftler starten , wenn rot begraben
 ;screen höhe/breite und dann mousemove relativ dazu
