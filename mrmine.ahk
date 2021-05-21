@@ -27,9 +27,9 @@
                                 ExitApp, 1
                         SearchFor(1)
                         SearchFor(2)
-                        ;SearchFor(3)
+                        SearchFor(3)
                         ;SearchFor(4)
-                       ; SearchForPixels(0x295882)
+                        ; SearchForPixels(0x295882)
                         ;SearchForPixels(0x00F9DD)
                         ;SearchForMonster()
                         ;SearchForScientists()
@@ -43,7 +43,7 @@
         Else
                 MouseGetPos, MouseX, MouseY
         PixelGetColor, color, %MouseX%, %MouseY%
-        MsgBox The color at the current cursor position is %color%.
+        MsgBox x %MouseX% y %MouseY%  c %color%
 GuiClose:
 ExitApp, 2
 
@@ -64,7 +64,7 @@ Return
 }
 OpenChests(){
         if GetKeyState("Esc","P")
-                 ExitApp, 1
+                ExitApp, 1
         MouseMove, Fx, Fy+3
         sleep,1
         MouseClick
@@ -77,19 +77,18 @@ OpenChests(){
         ShiftKlickLine()
         ShiftKlickLine()	
         Sleep, 10
-        Verkaufen()     
+        Verkaufen() 
         SearchFor(what) 
 }
-SearchForPixels(x,y,x2,y2,color){
-        
-        PixelSearch, FoundX, FoundY, x, y, x2, y2, color,10,Fast
+SearchForPixels(x,y,x2,y2,color,v){
+
+        PixelSearch, FoundX, FoundY, x, y, x2, y2, color,v,Fast
         if (ErrorLevel = 1)
-        Return
-        Else      
-        global Fx := FoundX
-        global Fy := FoundY  
-        Return 1
-        
+                Return
+        Else 
+                global Fx := FoundX
+        global Fy := FoundY 
+Return 1
 
 }
 
@@ -108,15 +107,57 @@ ShiftKlickLine(){
                 If (index == 10){
                         index = 0
                         Send,{Up}
+                        Send,{Esc}
                         break
 
                 }
-
+                
         }
 Return
 }
+SearchForMonster(){
+        MouseMove, Fx, Fy+3
+        sleep,1
+        MouseClick
+        Send,{Down}
+        Send,{Down}
+        Send,{Down}
+        ShiftKlickLine()
+        ShiftKlickLine()
+        ShiftKlickLine()
+        ShiftKlickLine()
+        ShiftKlickLine()	
+        Sleep, 10
+        KillMonster()
+}
+
 KillMonster(){
-       
+        alive = 1
+        count = 0
+        
+        while(alive ==1){
+                If (SearchForPixels(524, 226, 526, 227,0x111199,3)==1){
+                if (SearchForPixels(563, 663, 1329, 847,0xADD7AE,20)==1){
+                        
+                        MouseMove, Fx+5, Fy+5
+                        Sleep, 2
+                        MouseClick
+                        Sleep, 5
+                        
+                }
+                }
+                
+                Else{
+                alive = 2
+                }
+                
+               
+                
+
+               
+               
+        }
+        SearchFor(what)
 }
 
 SearchForScientists(){
@@ -154,23 +195,34 @@ MoveMouseTo(x,y){
 }
 ;searchfor 1 = chest, 2 = gchest , 3 monster, 4 scientist, 5 oil, ...
 SearchFor(thing){
-        If (thing == 1)
-                if (SearchForPixels(100, 350, 140, 950,0x295882)==1)
+        If (thing == 1){
+                if (SearchForPixels(100, 350, 140, 950,0x295882,3)==1){
                 global what = 1
                 OpenChests()
                 return
-        If (thing == 2)      
-                if (SearchForPixels(100, 350, 140, 950,0x00F9DD)==1)
-                global what = 2
+                }
+                        
+        }
+
+        If (thing == 2) {
+                if (SearchForPixels(100, 350, 140, 950,0x00F9DD,3)==1){
+ global what = 2
                 OpenChests()
                 return
-        If (thing ==3)
-                If (SearchForPixels(100, 350, 140, 950,0x0000FF)==1)
-                global what = 3
-                KillMonster()
+                }
+                       
+        } 
+
+        If (thing ==3){
+                If (SearchForPixels(100, 350, 140, 950,0x0000FF,3)==1){
+global what = 3
+                SearchForMonster()
                 Return
-             
+                }
+                        
+        }
+Return
         ;If (thing ==4)
-               ; SearchForMonster(;green)
+        ; SearchForMonster(;green)
 
 }
