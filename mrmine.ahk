@@ -125,3 +125,6 @@ SearchForScientistRight(){
 TakeRewardsAndGiveLeftQuest(){
 
 }
+MoveMouseTo(x,y){
+        
+}
